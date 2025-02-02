@@ -1,9 +1,9 @@
 import { View, StyleSheet, Text, FlatList } from "react-native";
-import { Button, ListItem } from "@rneui/base";
+import { Button, ListItem, FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
 import { useState } from "react";
 
-export const laptopList = () => {
+export const laptopList = ({navigation}) => {
   fnRefreshList = (laptops) => {
     setLaptopsList(laptops);
   };
@@ -11,9 +11,7 @@ export const laptopList = () => {
     console.log(item);
     return (
       <ListItem>
-        <ListItem.Title>
-          {item.marca} 
-        </ListItem.Title>
+        <ListItem.Title>{item.marca}</ListItem.Title>
         <ListItem.Subtitle>{item.procesador}</ListItem.Subtitle>
         <ListItem.Subtitle>{item.memoria}</ListItem.Subtitle>
         <ListItem.Subtitle>{item.disco}</ListItem.Subtitle>
@@ -28,13 +26,19 @@ export const laptopList = () => {
       <Button
         title="consultar"
         onPress={() => {
-            getAllLaptops(fnRefreshList);
+          getAllLaptops(fnRefreshList);
         }}
       ></Button>
       <FlatList
         data={contactsList}
         renderItem={({ item }) => {
           return <LaptopItem item={item} />;
+        }}
+      />
+      <FAB
+        title="+"
+        onPress={() => {
+          navigation.navigate("LaptopFormNav");
         }}
       />
     </View>
