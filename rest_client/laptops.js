@@ -30,3 +30,24 @@ export const saveLaptopRest = (laptop, fnShowMessage) => {
       console.log(body);
     });
 };
+
+export const updateLaptopRest = (laptop, fnShowMessage, fnRefreshList) => {
+  const config = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(laptop),
+  };
+
+  fetch(url + "laptops/" + laptop.id, config)
+    .then((response) => response.json())
+    .then((body) => {
+      console.log("Laptop actualizada:", body);
+      fnShowMessage();
+      fnRefreshList(); // Asegurar que se refresca la lista en pantalla
+    })
+    .catch((error) => {
+      console.error("Error al actualizar la laptop:", error);
+    });
+};
