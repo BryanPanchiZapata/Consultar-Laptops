@@ -4,13 +4,12 @@ import { Button, Input } from "@rneui/base";
 import {
   saveLaptopRest,
   updateLaptopRest,
+  deleteLaptopRest,
 } from "../rest_client/laptops";
 
 export const LaptopForm = ({ navigation, route }) => {
-  
   let laptopRetrieve = route.params.itemParam;
   let isNew = true;
-  let fnRefreshList = route.params.fnRefreshList;
   if (laptopRetrieve != null) {
     isNew = false;
   }
@@ -22,11 +21,8 @@ export const LaptopForm = ({ navigation, route }) => {
   const [memoria, setMemoria] = useState(isNew ? null : laptopRetrieve.memoria);
   const [disco, setDisco] = useState(isNew ? null : laptopRetrieve.disco);
 
-  const showMessage = () => {
-    Alert.alert(
-      "CONFIRMACIÓN",
-      isNew ? "Laptop guardada" : "Laptop actualizada"
-    );
+  const showMessage = (message) => {
+    Alert.alert("CONFIRMACIÓN", message);
     navigation.goBack();
   };
   const createLaptop = () => {
@@ -50,6 +46,28 @@ export const LaptopForm = ({ navigation, route }) => {
       disco: disco,
     };
     updateLaptopRest(laptopData, showMessage, route.params.fnRefreshList);
+  };
+
+  const confirmDeleteLaptop = () => {
+    console.log("eliminando laptop");
+    Alert.alert("CONFIRMACIÓN", "Está seguro que desea eliminar el laptop", [
+      {
+        text: "Cancelar",
+      },
+      {
+        
+        text: "Eliminar",
+        
+        onPress:()=>{
+          console.log("Botón de eliminar presionado");
+          deleteLaptop();
+        }
+        
+      },
+    ]);
+  };
+  const deleteLaptop = () => {
+    deleteLaptopRest({ id: laptopRetrieve.id }, showMessage);
   };
   return (
     <View style={styles.container}>
@@ -87,7 +105,17 @@ export const LaptopForm = ({ navigation, route }) => {
           setDisco(value);
         }}
       />
-      <Button title="Guardar" onPress={isNew ? createLaptop : updateLaptop} />
+      <Button style={styles.button} title="Guardar" onPress={isNew ? createLaptop : updateLaptop} />
+      {isNew ? (
+        <View></View>
+      ) : (
+        <Button
+          title="Eliminar"
+          onPress={() => {
+            confirmDeleteLaptop();
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -97,5 +125,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    margin: 10,
   },
 });

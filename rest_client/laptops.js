@@ -26,12 +26,12 @@ export const saveLaptopRest = (laptop, fnShowMessage) => {
   fetch(url + "laptops", config)
     .then((response) => response.json())
     .then((body) => {
-      fnShowMessage();
+      fnShowMessage("Se ha creado la laptop");
       console.log(body);
     });
 };
 
-export const updateLaptopRest = (laptop, fnShowMessage, fnRefreshList) => {
+export const updateLaptopRest = (laptop, fnShowMessage) => {
   const config = {
     method: "PUT",
     headers: {
@@ -44,10 +44,19 @@ export const updateLaptopRest = (laptop, fnShowMessage, fnRefreshList) => {
     .then((response) => response.json())
     .then((body) => {
       console.log("Laptop actualizada:", body);
-      fnShowMessage();
-      fnRefreshList(); // Asegurar que se refresca la lista en pantalla
-    })
-    .catch((error) => {
-      console.error("Error al actualizar la laptop:", error);
+      fnShowMessage("Se ha actualizado la laptop");
+    });
+};
+
+export const deleteLaptopRest = (laptop, fnShowMessage) => {
+  const config = {
+    method: "DELETE",
+  };
+  fetch(url + "laptops/" + laptop.id, config)
+    .then((response) => response.json())
+    .then((body) => {
+      console.log("Respuesta del servidor:", body);
+      fnShowMessage("Se ha eliminado la laptop");
+      console.log(body);
     });
 };

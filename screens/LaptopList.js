@@ -1,9 +1,19 @@
-import { View, StyleSheet, Text, FlatList, TouchableHighlight } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  TouchableHighlight,
+} from "react-native";
 import { Button, ListItem, FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export const laptopList = ({navigation}) => {
+export const laptopList = ({ navigation }) => {
+  const [laptopsList, setLaptopsList] = useState([]);
+  useEffect(() => {
+    getAllLaptops(fnRefreshList);
+  }, []);
   fnRefreshList = (laptops) => {
     setLaptopsList(laptops);
   };
@@ -11,32 +21,27 @@ export const laptopList = ({navigation}) => {
     console.log(item);
     return (
       <TouchableHighlight
-      onPress={()=>{
-        navigation.navigate("LaptopFormNav", {itemParam: item,
-          fnRefreshList: fnRefreshList
-        });
-      }}
+        onPress={() => {
+          navigation.navigate("LaptopFormNav", {
+            itemParam: item,
+            fnRefreshList: fnRefreshList,
+          });
+        }}
       >
-      <ListItem>
-        <ListItem.Title>{item.marca}</ListItem.Title>
-        <ListItem.Subtitle>{item.procesador}</ListItem.Subtitle>
-        <ListItem.Subtitle>{item.memoria}</ListItem.Subtitle>
-        <ListItem.Subtitle>{item.disco}</ListItem.Subtitle>
-      </ListItem>
+        <ListItem>
+          <ListItem.Title>{item.marca}</ListItem.Title>
+          <ListItem.Subtitle>{item.procesador}</ListItem.Subtitle>
+          <ListItem.Subtitle>{item.memoria}</ListItem.Subtitle>
+          <ListItem.Subtitle>{item.disco}</ListItem.Subtitle>
+        </ListItem>
       </TouchableHighlight>
     );
   };
-  const [laptopsList, setLaptopsList] = useState([]);
 
   return (
     <View style={styles.container}>
       <Text>Lista de Laptops</Text>
-      <Button
-        title="consultar"
-        onPress={() => {
-          getAllLaptops(fnRefreshList);
-        }}
-      ></Button>
+
       <FlatList
         data={laptopsList}
         renderItem={({ item }) => {
@@ -46,7 +51,9 @@ export const laptopList = ({navigation}) => {
       <FAB
         title="+"
         onPress={() => {
-          navigation.navigate("LaptopFormNav", {fnRefreshList: fnRefreshList});
+          navigation.navigate("LaptopFormNav", {
+            fnRefreshList: fnRefreshList,
+          });
         }}
       />
     </View>
